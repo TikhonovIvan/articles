@@ -1,0 +1,29 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    min-height: 100vh; /* Гарантирует, что body займет всю высоту экрана */
+    display: flex;
+    flex-direction: column;
+
+}
+
+.ck-editor__editable_inline {
+    min-height: 200px; /* Минимальная высота для содержимого */
+}
+.bg-article{
+    background-color: white;
+    transition: background-color 0.5s;
+}
+
+.bg-article:hover{
+    background: #ededed;
+}
+
+.user-img{
+    width: 200px;
+    height: 200px;
+}
