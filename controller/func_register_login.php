@@ -39,3 +39,36 @@ function login(array $data): bool
     $_SESSION['success'] = 'Welcome';
     return true;
 }
+
+
+function change_password(array $data): bool
+{
+    global $db;
+    $stmt =$db->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->execute([$data['user_id']]);
+    $row = $stmt->fetch();
+    if (!$row ) {
+        $_SESSION['errors'] = 'User not found';
+        return false;
+    }
+
+    if (!password_verify($data['password'], $row['password'])) {
+        $_SESSION['errors'] = 'Wrong current password';
+        return false;
+    }
+    if($data['password-new'] !==  $data['password-new2']){
+        $_SESSION['errors'] = 'Wrong password_new and Repeat new password';
+        return false;
+    }
+
+    // Хэширование нового пароля
+    $hashedPassword = password_hash($data['password-new'], PASSWORD_DEFAULT);
+
+    $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+    if($stmt->execute([$hashedPassword, $data['user_id']])){
+        $_SESSION['success'] = 'Password successfully changed';
+        return true;
+    }
+    $_SESSION['errors'] = 'Failed to update password';
+    return false;
+}

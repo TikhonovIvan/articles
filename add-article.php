@@ -13,7 +13,7 @@ require_once __DIR__ . "/view/incs/header.tpl.php";
     <main class="main mt-3">
         <div class="container mt-5">
             <div class="row">
-                <div class="col-6 m-auto">
+                <div class="col-12 col-md-6 m-auto">
                     <div class="alert alert-warning alert-danger alert-dismissible fade show" role="alert">
                         Errors
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

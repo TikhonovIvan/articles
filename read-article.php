@@ -12,15 +12,15 @@ require_once __DIR__ . "/view/incs/header.tpl.php";
     <div class="container mt-5">
         <div class="row">
 
-            <div class="col-9 ">
-                <div class="col-6 m-auto">
+            <div class="col-md-9 col-12 ">
+                <div class="col-12 col-md-9 m-auto">
                     <div class="alert alert-success alert-success alert-dismissible fade show" role="alert">
                         Success
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
 
-                <div class="mt-5">
+                <div class="my-5">
                     <img src="./img/card.jpg" style="max-height: 200px; width: 50%" alt="">
                     <h2 class="mt-4">Tittle article</h2>
                     <div class="mt-3">
@@ -30,7 +30,7 @@ require_once __DIR__ . "/view/incs/header.tpl.php";
                     </div>
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-3 d-none d-md-block">
                 <h4>Hot Topics</h4>
                 <div>
                     <hr>

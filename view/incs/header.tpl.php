@@ -35,7 +35,7 @@ do_exit($_GET['do'] ?? null);
                         <a class="nav-link active" aria-current="page" href="index.php">Home</a>
                     </li>
                 </ul>
-                <?php if ($_SERVER['PHP_SELF'] !== '/register.php' && $_SERVER['PHP_SELF'] !== '/login.php'): ?>
+                <?php if ($_SERVER['PHP_SELF'] !== '/register.php' && $_SERVER['PHP_SELF'] !== '/login.php' && $_SERVER['PHP_SELF'] !== '/profile-user.php'): ?>
                     <form class="d-none d-lg-block" role="search">
                         <div class="d-flex">
                             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -71,11 +71,12 @@ do_exit($_GET['do'] ?? null);
         </div>
     </nav>
 
+    <?php if ($_SERVER['PHP_SELF'] !== '/register.php' && $_SERVER['PHP_SELF'] !== '/login.php' && $_SERVER['PHP_SELF'] !== '/profile-user.php'): ?>
     <form class="m-3 d-lg-none d-md-block" role="search">
         <div class="d-flex">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </div>
     </form>
-
+    <?php endif; ?>
 </header>

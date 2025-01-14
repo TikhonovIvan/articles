@@ -1,7 +1,7 @@
 <main class="main mt-3">
     <div class="container ">
         <div class="row my-2">
-            <div class="col-6 m-auto">
+            <div class="col-12 col-md-6 m-auto">
                 <?php if (isset($_SESSION['success'])): ?>
                     <div class="alert alert-success alert-success alert-dismissible fade show" role="alert">
                         <?php
