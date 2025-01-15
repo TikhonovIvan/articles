@@ -6,6 +6,10 @@ require_once __DIR__ . "/vendor/autoload.php";
 require_once __DIR__ . "/database/db.php";
 require_once __DIR__ . "/controller/functions.php";
 require_once __DIR__ . "/view/incs/header.tpl.php";
+require_once __DIR__ . "/controller/func_article.php";
+
+$id = $_GET['id'];
+$article_reads = read_article($id);
 ?>
 
 <main class="main mt-3">
@@ -14,20 +18,25 @@ require_once __DIR__ . "/view/incs/header.tpl.php";
 
             <div class="col-md-9 col-12 ">
                 <div class="col-12 col-md-9 m-auto">
-                    <div class="alert alert-success alert-success alert-dismissible fade show" role="alert">
-                        Success
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                    <?php if (isset($_SESSION['success'])): ?>
+                        <div class="alert alert-success alert-success alert-dismissible fade show" role="alert">
+                            <?php
+                            echo $_SESSION['success'];
+                            unset($_SESSION['success']);
+                            ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="my-5">
                     <img src="./img/card.jpg" style="max-height: 200px; width: 50%" alt="">
-                    <h2 class="mt-4">Tittle article</h2>
+                    <?php foreach ($article_reads as $article_read):?>
+                    <h2 class="mt-4"><?= $article_read['title']?></h2>
                     <div class="mt-3">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cumque et facere in laboriosam placeat
-                        quaerat quas quidem ratione ullam voluptatum! Ab architecto assumenda eveniet, fugit incidunt
-                        libero rem reprehenderit rerum?
+                        <?= $article_read['article_body']?>
                     </div>
+                    <?php endforeach;?>
                 </div>
             </div>
             <div class="col-3 d-none d-md-block">

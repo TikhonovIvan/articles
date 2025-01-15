@@ -5,14 +5,14 @@ $title = 'Create Article';
 require_once __DIR__ . "/vendor/autoload.php";
 require_once __DIR__ . "/database/db.php";
 require_once __DIR__ . "/controller/functions.php";
+require_once __DIR__ . "/controller/Pagination.php";
 require_once __DIR__ . "/controller/func_article.php";
 require_once __DIR__ . "/view/incs/header.tpl.php";
 
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $isPublic = (int)isset($_POST['publication']);
-    $data = load(['user_id', 'title-article', 'editor','publication']);
+    $data = load(['user_id', 'title-article', 'editor', 'publication']);
 
     $v = new Valitron\Validator($data);
     $v->rules([
@@ -30,9 +30,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['errors'] = get_errors($v->errors());
     }
 }
+
+
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$per_page = 2; // Количество статей на странице
+$total = get_count_articles();
+
+$pagination = new Pagination($page, $per_page, $total);
+$start = $pagination->getStart();
+
+// Получаем статьи с учетом пагинации
 $id_user = $_SESSION['user']['id'];
-var_dump($id_user);
-$articles = get_articles($id_user);
+$articles = get_articles($id_user, $start, $per_page);
 
 
 ?>
@@ -62,6 +71,7 @@ $articles = get_articles($id_user);
                 <div class="col-12 ">
                     <h2 class="text-center mb-5">Create article</h2>
                     <form method="post" class="text-center">
+                        <input type="hidden" name="page" value="<?= $_GET['page'] ?? 1?>">
                         <input type="hidden" name="user_id" value="<?= $id_user ?>">
                         <div class="form-floating mb-3">
                             <input type="text" name="title-article" class="form-control" id="floatingInput"
@@ -70,13 +80,13 @@ $articles = get_articles($id_user);
                         </div>
                         <div class="form-floating ">
                             <label for="floatingTextarea"></label>
-                            <textarea class="form-control mt-5 " placeholder="Leave a comment here"
+                            <textarea  class="form-control mt-5 " placeholder="Leave a comment here"
                                       id="floatingTextarea"
                                       name="editor"><?= old('editor') ?></textarea>
                         </div>
                         <div class="form-check text-start mt-3">
                             <input class="form-check-input" name="publication" type="checkbox"
-                                   id="flexCheckChecked" value="<?= $isPublic?>" >
+                                   id="flexCheckChecked" value="<?= $isPublic ?>">
                             <label class="form-check-label" for="flexCheckChecked">
                                 Publication
                             </label>
@@ -95,35 +105,35 @@ $articles = get_articles($id_user);
                 </div>
             </div>
             <div class="row">
-                <?php foreach ($articles as $article): ?>
-                    <div class="col-lg-6 col-sm-12">
-                        <div class="card my-3">
-                            <img src="img/card.jpg" style="max-height: 200px" class="card-img-top img-fluid" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title"><?= $article['title']?></h5>
-                                <p class="card-text"><?= $article['article_body']?></p>
-                                <a href="read-article.php" class="btn btn-primary">Read</a>
-                                <a href="edit-article.php" class="btn btn-primary">Edit</a>
+                <?php if (!empty($articles)): ?>
+                    <?php foreach ($articles as $article): ?>
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="card my-3">
+                                <img src="img/card.jpg" style="max-height: 200px" class="card-img-top img-fluid"
+                                     alt="...">
+                                <div class="card-body" style="height: 230px">
+                                    <h5 class="card-title"><?= $article['title'] ?></h5>
+                                    <p class="card-text"><?= mb_strimwidth($article['article_body'],0 ,200, "...") ?></p>
+                                    <a href="read-article.php?id=<?= $article['id'] ?>" class="btn btn-primary">Read</a>
+                                    <a href="edit-article.php?id=<?= $article['id'] ?>" class="btn btn-primary">Edit</a>
+
+                                </div>
                             </div>
                         </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <h4 class="my-2">Messages not found</h4>
+                <?php endif; ?>
+
+            </div>
+
+            <?php if (!empty($articles)): ?>
+                <div class="row">
+                    <div class="col-12">
+                        <?= $pagination?>
                     </div>
-                <?php endforeach; ?>
-
-            </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
                 </div>
-            </div>
+            <?php endif; ?>
         </div>
     </main>
 

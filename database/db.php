@@ -9,7 +9,8 @@ const DB_PORT = 3306;
 
 
 const DB_OPTIONS = [
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+
 ];
 
 const DNS = "mysql:dbname=" . DB_DATABASE . ";host=" . DB_HOST . ";port=". DB_PORT . ";charset=utf8";
