@@ -28,3 +28,9 @@ body{
     height: 200px;
 
 }
+
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}

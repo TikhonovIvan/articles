@@ -8,8 +8,9 @@ require_once __DIR__ . "/controller/functions.php";
 require_once __DIR__ . "/view/incs/header.tpl.php";
 require_once __DIR__ . "/controller/func_article.php";
 
-$id_user = isset($_GET['id']);
+$id_user = $_GET['id'];
 $articles = edit_article($id_user);
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $isPublic = (int)isset($_POST['publication']);

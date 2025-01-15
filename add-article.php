@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = $_GET['page'] ?? 1;
 $per_page = 2; // Количество статей на странице
 $total = get_count_articles();
 
@@ -71,7 +71,7 @@ $articles = get_articles($id_user, $start, $per_page);
                 <div class="col-12 ">
                     <h2 class="text-center mb-5">Create article</h2>
                     <form method="post" class="text-center">
-                        <input type="hidden" name="page" value="<?= $_GET['page'] ?? 1?>">
+
                         <input type="hidden" name="user_id" value="<?= $id_user ?>">
                         <div class="form-floating mb-3">
                             <input type="text" name="title-article" class="form-control" id="floatingInput"
@@ -105,15 +105,18 @@ $articles = get_articles($id_user, $start, $per_page);
                 </div>
             </div>
             <div class="row">
+
                 <?php if (!empty($articles)): ?>
                     <?php foreach ($articles as $article): ?>
+
                         <div class="col-lg-6 col-sm-12">
+                            <input type="hidden" name="page" value="<?= $_GET['page'] ?? 1?>">
                             <div class="card my-3">
                                 <img src="img/card.jpg" style="max-height: 200px" class="card-img-top img-fluid"
                                      alt="...">
                                 <div class="card-body" style="height: 230px">
                                     <h5 class="card-title"><?= $article['title'] ?></h5>
-                                    <p class="card-text"><?= mb_strimwidth($article['article_body'],0 ,200, "...") ?></p>
+                                    <p class="card-text"><?= htmlspecialchars(mb_strimwidth($article['article_body'], 0, 200, "...")) ?></p>
                                     <a href="read-article.php?id=<?= $article['id'] ?>" class="btn btn-primary">Read</a>
                                     <a href="edit-article.php?id=<?= $article['id'] ?>" class="btn btn-primary">Edit</a>
 
@@ -122,7 +125,7 @@ $articles = get_articles($id_user, $start, $per_page);
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <h4 class="my-2">Messages not found</h4>
+                    <h4 class="my-2">Articles not found</h4>
                 <?php endif; ?>
 
             </div>

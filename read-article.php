@@ -10,6 +10,7 @@ require_once __DIR__ . "/controller/func_article.php";
 
 $id = $_GET['id'];
 $article_reads = read_article($id);
+$limit_articles = limit_articles();
 ?>
 
 <main class="main mt-3">
@@ -44,30 +45,15 @@ $article_reads = read_article($id);
                 <div>
                     <hr>
                 </div>
+                <?php foreach ($limit_articles as $limit_article):?>
                 <div class="card-body border-bottom mb-2 p-2 bg-article">
-                    <a href="read-article.php" class="mb-2 text-black text-decoration-none">
-                        <h5 class="card-title mb-2">Name Article</h5>
-                        <p>Lorem ipsum dolor sit amet...</p>
+                    <a href="read-article.php?id=<?= $limit_article['id']?>" class="mb-2 text-black text-decoration-none">
+                        <h6 class="card-title mb-2"><?= mb_strimwidth($limit_article['title'], 0 , 85, "...")?></h6>
+
                     </a>
                 </div>
-                <div class="card-body border-bottom mb-2 p-2 bg-article">
-                    <a href="read-article.php" class="mb-2 text-black text-decoration-none">
-                        <h5 class="card-title mb-2">Name Article</h5>
-                        <p>Lorem ipsum dolor sit amet...</p>
-                    </a>
-                </div>
-                <div class="card-body border-bottom mb-2 p-2 bg-article">
-                    <a href="read-article.php" class="mb-2 text-black text-decoration-none">
-                        <h5 class="card-title mb-2">Name Article</h5>
-                        <p>Lorem ipsum dolor sit amet...</p>
-                    </a>
-                </div>
-                <div class="card-body border-bottom mb-2 p-2 bg-article">
-                    <a href="read-article.php" class="mb-2 text-black text-decoration-none">
-                        <h5 class="card-title mb-2">Name Article</h5>
-                        <p>Lorem ipsum dolor sit amet...</p>
-                    </a>
-                </div>
+                <?php endforeach;?>
+
             </div>
         </div>
     </div>
