@@ -5,8 +5,8 @@ $title = 'Create Article';
 require_once __DIR__ . "/vendor/autoload.php";
 require_once __DIR__ . "/database/db.php";
 require_once __DIR__ . "/controller/functions.php";
-require_once __DIR__ . "/controller/Pagination.php";
 require_once __DIR__ . "/controller/func_article.php";
+require_once __DIR__ . "/controller/Pagination.php";
 require_once __DIR__ . "/view/incs/header.tpl.php";
 
 
@@ -30,17 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['errors'] = get_errors($v->errors());
     }
 }
-
-
+$id_user = $_SESSION['user']['id'];
 $page = $_GET['page'] ?? 1;
-$per_page = 2; // Количество статей на странице
-$total = get_count_articles();
-
-$pagination = new Pagination($page, $per_page, $total);
+$per_page = 4; // Количество статей на странице
+$total = get_count_articles_2($id_user);
+$pagination = new Pagination((int)$page, $per_page, $total);
 $start = $pagination->getStart();
 
-// Получаем статьи с учетом пагинации
-$id_user = $_SESSION['user']['id'];
 $articles = get_articles($id_user, $start, $per_page);
 
 
@@ -80,7 +76,7 @@ $articles = get_articles($id_user, $start, $per_page);
                         </div>
                         <div class="form-floating ">
                             <label for="floatingTextarea"></label>
-                            <textarea  class="form-control mt-5 " placeholder="Leave a comment here"
+                            <textarea class="form-control mt-5 " placeholder="Leave a comment here"
                                       id="floatingTextarea"
                                       name="editor"><?= old('editor') ?></textarea>
                         </div>
@@ -108,21 +104,24 @@ $articles = get_articles($id_user, $start, $per_page);
 
                 <?php if (!empty($articles)): ?>
                     <?php foreach ($articles as $article): ?>
+                        <input type="hidden" name="page" value="<?= $_GET['page'] ?? 1 ?>">
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="card my-3">
+                                    <img src="img/card.jpg" style="max-height: 200px" class="card-img-top img-fluid"
+                                         alt="...">
+                                    <div class="card-body" style="height: 230px">
+                                        <h5 class="card-title"><?= $article['title'] ?></h5>
+                                        <p class="card-text"><?= htmlspecialchars(mb_strimwidth(strip_tags($article['article_body']), 0, 200, "...")) ?></p>
 
-                        <div class="col-lg-6 col-sm-12">
-                            <input type="hidden" name="page" value="<?= $_GET['page'] ?? 1?>">
-                            <div class="card my-3">
-                                <img src="img/card.jpg" style="max-height: 200px" class="card-img-top img-fluid"
-                                     alt="...">
-                                <div class="card-body" style="height: 230px">
-                                    <h5 class="card-title"><?= $article['title'] ?></h5>
-                                    <p class="card-text"><?= htmlspecialchars(mb_strimwidth($article['article_body'], 0, 200, "...")) ?></p>
-                                    <a href="read-article.php?id=<?= $article['id'] ?>" class="btn btn-primary">Read</a>
-                                    <a href="edit-article.php?id=<?= $article['id'] ?>" class="btn btn-primary">Edit</a>
+                                        <a href="read-article.php?id=<?= $article['id'] ?>"
+                                           class="btn btn-primary">Read</a>
+                                        <a href="edit-article.php?id=<?= $article['id'] ?>"
+                                           class="btn btn-primary">Edit</a>
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
                     <?php endforeach; ?>
                 <?php else: ?>
                     <h4 class="my-2">Articles not found</h4>
@@ -133,7 +132,7 @@ $articles = get_articles($id_user, $start, $per_page);
             <?php if (!empty($articles)): ?>
                 <div class="row">
                     <div class="col-12">
-                        <?= $pagination?>
+                        <?= $pagination ?>
                     </div>
                 </div>
             <?php endif; ?>

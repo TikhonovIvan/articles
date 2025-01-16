@@ -18,11 +18,16 @@ function create_article(array $data): bool
 function get_count_articles(): int
 {
     global $db;
-    if (!check_auth()) {
-        $_SESSION['errors'] = 'Login is required';
-        redirect('login.php');
-    }
-    $stmt = $db->query("SELECT COUNT(*) FROM article_text");
+    $where = 'WHERE status = 1'; // Добавлено явно, так как нужны только статьи со статусом 1
+    $stmt = $db->query("SELECT COUNT(*) FROM article_text {$where}");
+    return (int)$stmt->fetchColumn();
+}
+function get_count_articles_2(int $id_user): int
+{
+    global $db;
+    $stmt = $db->prepare("SELECT COUNT(*) FROM article_text WHERE user_id = :id_user");
+    $stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+    $stmt->execute();
     return (int)$stmt->fetchColumn();
 }
 
@@ -31,6 +36,7 @@ function get_articles(int $id_user, int $start, int $per_page): array
 {
     global $db;
 
+    // Условие WHERE: выбираем статьи текущего пользователя без фильтрации по статусу
     $stmt = $db->prepare("
         SELECT * FROM article_text 
         WHERE user_id = :id_user 
@@ -38,14 +44,15 @@ function get_articles(int $id_user, int $start, int $per_page): array
         LIMIT :start, :per_page
     ");
 
+    // Привязываем параметры
     $stmt->bindValue(':id_user', $id_user, PDO::PARAM_INT);
+    // Используем PDO::PARAM_INT для параметров LIMIT
     $stmt->bindValue(':start', $start, PDO::PARAM_INT);
     $stmt->bindValue(':per_page', $per_page, PDO::PARAM_INT);
 
     $stmt->execute();
     return $stmt->fetchAll();
 }
-
 
 
 //Чтение статьи
@@ -105,22 +112,9 @@ function limit_articles(): bool|array
 function home_articles(int $start, int $per_page): array
 {
     global $db;
-
-    // Формируем условие WHERE
-    $where = '';
-    if (!check_auth()) {
-        $where = 'WHERE status = 1';
-    }
-
-    // SQL-запрос с динамическим условием
-    $sql = "SELECT * FROM article_text $where ORDER BY id DESC LIMIT :start, :per_page";
-
+    $where = 'WHERE status = 1'; // Используем фильтр для выборки только опубликованных статей
+    $sql = "SELECT * FROM article_text {$where} ORDER BY id DESC LIMIT $start, $per_page";
     $stmt = $db->prepare($sql);
-
-    // Привязываем параметры
-    $stmt->bindValue(':start', $start, PDO::PARAM_INT);
-    $stmt->bindValue(':per_page', $per_page, PDO::PARAM_INT);
-
     $stmt->execute();
     return $stmt->fetchAll();
 }

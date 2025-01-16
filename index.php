@@ -9,14 +9,12 @@ require_once __DIR__ . "/controller/func_article.php";
 require_once __DIR__ . "/view/incs/header.tpl.php";
 require_once __DIR__ . "/controller/Pagination.php";
 
-$page = $_GET['page'] ?? 1;
-$per_page = 3; // Количество статей на странице
-$total = get_count_articles();
 
-$pagination = new Pagination($page, $per_page, $total);
+$page = $_GET['page'] ?? 1;
+$per_page = 6; // Количество статей на странице
+$total = get_count_articles();
+$pagination = new Pagination((int)$page, $per_page, $total);
 $start = $pagination->getStart();
-//
-$id_user = $_SESSION['user']['id'];
 $articles = home_articles($start, $per_page);
 
 

@@ -22,19 +22,23 @@ global $articles
             </div>
         </div>
         <div class="row">
-            <?php foreach ($articles as $article): ?>
-                <div class="col-lg-6 col-sm-12">
-                    <input type="hidden" name="page" value="<?= $_GET['page'] ?? 1 ?>">
-                    <div class="card my-2">
-                        <img src="img/car-bg.jpg" style="max-height: 200px" class="card-img-top img-fluid" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= $article['title'] ?></h5>
-                            <p class="card-text"><?= htmlspecialchars(mb_strimwidth($article['article_body'], 0, 200, "...")) ?></p>
-                            <a href="read-article.php?id=<?= $article['id'] ?>" class="btn btn-primary">Read</a>
+            <div class="row" id="article-results">
+                <?php foreach ($articles as $article): ?>
+                    <?php if ($article['status'] == 1): ?>
+                        <div class="col-lg-6 col-sm-12">
+                            <div class="card my-2">
+                                <img src="img/car-bg.jpg" style="max-height: 200px" class="card-img-top img-fluid"
+                                     alt="...">
+                                <div class="card-body" style="height: 200px">
+                                    <h5 class="card-title"><?= htmlspecialchars($article['title']) ?></h5>
+                                    <p class="card-text mt-2"><?= htmlspecialchars(mb_strimwidth(strip_tags($article['article_body']), 0, 100, "...")) ?></p>
+                                    <a href="read-article.php?id=<?= $article['id'] ?>" class="btn btn-primary px-5">Read</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
 
 

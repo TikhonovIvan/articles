@@ -42,6 +42,7 @@ do_exit($_GET['do'] ?? null);
                             <button class="btn btn-outline-success" type="submit">Search</button>
                         </div>
                     </form>
+
                 <?php endif; ?>
 
 
