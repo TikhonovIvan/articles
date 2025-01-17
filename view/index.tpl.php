@@ -29,9 +29,16 @@ global $articles
                             <div class="card my-2">
                                 <img src="img/car-bg.jpg" style="max-height: 200px" class="card-img-top img-fluid"
                                      alt="...">
-                                <div class="card-body" style="height: 200px">
+                                <div class="card-body" style="height: 280px">
+
                                     <h5 class="card-title"><?= htmlspecialchars($article['title']) ?></h5>
                                     <p class="card-text mt-2"><?= htmlspecialchars(mb_strimwidth(strip_tags($article['article_body']), 0, 100, "...")) ?></p>
+                                    <hr>
+                                    <div class="d-flex justify-content-between">
+                                        <div>User: <?= ($article['author_name']) ?></div>
+                                        <div>Data:<?= ($article['formatted_date']) ?></div>
+                                    </div>
+                                    <hr>
                                     <a href="read-article.php?id=<?= $article['id'] ?>" class="btn btn-primary px-5">Read</a>
                                 </div>
                             </div>

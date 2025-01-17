@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['errors'] = get_errors($v->errors());
     }
 }
+
 $id_user = $_SESSION['user']['id'];
 $page = $_GET['page'] ?? 1;
 $per_page = 4; // Количество статей на странице
@@ -38,6 +39,13 @@ $pagination = new Pagination((int)$page, $per_page, $total);
 $start = $pagination->getStart();
 
 $articles = get_articles($id_user, $start, $per_page);
+
+if (isset($_GET['delete']) && !empty($_GET['delete'])) {
+    $delete = (int)$_GET['delete']; // Преобразуем в число для безопасности
+    delete_articles([$delete]); // Передаем как массив
+}
+
+
 
 
 ?>
@@ -117,6 +125,8 @@ $articles = get_articles($id_user, $start, $per_page);
                                            class="btn btn-primary">Read</a>
                                         <a href="edit-article.php?id=<?= $article['id'] ?>"
                                            class="btn btn-primary">Edit</a>
+                                        <a class="btn btn-danger" href="?delete=<?= $article['id'] ?>">Delete</a>
+
 
                                     </div>
                                 </div>
